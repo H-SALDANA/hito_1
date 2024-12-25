@@ -5,7 +5,7 @@ const getUsers = async (req: Request, res: Response) => {
     try {
         const users = await userService.getAllUsers()
         res.json({
-            email:req.email,
+            // email:req.email,
             users
         })
     } catch (error) {

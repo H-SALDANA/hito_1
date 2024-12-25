@@ -10,7 +10,10 @@ const router = Router();
 
 // leer los usuarios
 // ruta protegida:
-router.get('/', verifyToken, userController.getUsers)
+// router.get('/', verifyToken, userController.getUsers)//
+// el codigo siguiente se extrajo el verifytoken.
+router.get('/', userController.getUsers)
+
 
 // leer un único usuario por id
 
