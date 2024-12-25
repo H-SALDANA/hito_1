@@ -1,7 +1,7 @@
 import { pool } from "../config/database";
 import { User } from "../interfaces/user.interface";
 
-const finAll = async() =>{
+const findAll = async() =>{
     const {rows} = await pool.query("SELECT * FROM USERS")
     return rows as User[];
 }
@@ -33,5 +33,5 @@ const create = async(email: string, password: string) =>{
 export const UserModel = {
     create,
     findOneByEmail,
-    finAll,
+    findAll,
 }

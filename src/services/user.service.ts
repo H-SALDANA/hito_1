@@ -6,7 +6,7 @@ import { HttpError } from "../utils/httpError.util";
 
 
 const getAllUsers= async() =>{
-   return  await UserModel.finAll();
+   return  await UserModel.findAll();
 }
 
 const getUser= async() =>{
