@@ -1,5 +1,5 @@
 # Define la versión del archivo Compose (opcional pero recomendable)
-# version: "3.8"
+version: "3.8"
 
 # Sección para definir los servicios del proyecto
 services:
@@ -15,7 +15,7 @@ services:
     environment:
       POSTGRES_USER: postgres # Usuario predeterminado de la base de datos
       POSTGRES_PASSWORD: root # Contraseña del usuario
-      POSTGRES_DB: dbtest # Nombre de la base de datos que se creará
+      POSTGRES_DB: dbsequelize # Nombre de la base de datos que se creará
 
     # Puertos: mapea el puerto 5432 (dentro del contenedor) al 5434 (en tu máquina host)
     ports:

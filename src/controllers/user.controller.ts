@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { userService } from "../services/user.service";
 
+
 const getUsers = async (req: Request, res: Response) => {
     try {
         const users = await userService.getAllUsers()
@@ -49,9 +50,27 @@ const createUser = async (req: Request, res: Response) => {
 };
 
 
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { uid } = req.params;
+    const user = await userService.findUserById(Number(uid));
+    console.log(user)
+    if (user) {
+      await user.destroy();
+      res.status(200).json({ message: 'Usuario eliminado exitosamente' });
+    } else {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el usuario', error });
+  }
+};
+
+
 
 export const userController = {
     getUsers,
     getUser,
     createUser,
+    deleteUser,
 }

@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import express from "express";
-import { pool } from "./config/database";
+// import { pool } from "./config/database";
 import userRoute from "./routes/user.route";
 import authRoute from "./routes/auth.route"
 import { httpErrorHandle } from "./middlewares/httpErrorHandle.middleware";
@@ -10,6 +10,7 @@ import petRoute from "./routes/pet.route"
 
 import openapiSpecification from "./config/swagger";
 import swaggerUI from "swagger-ui-express";
+import { sequelize } from './config/datasequelize';
 
 
 
@@ -49,8 +50,11 @@ app.use(httpErrorHandle)
 const main = async() => {
 
     try {
-        const {rows}= await pool.query("SELECT NOW()")
-        console.log(rows[0].now, "db conectada")
+        
+       
+        await sequelize.authenticate();
+        await sequelize.sync();
+        console.log("Database connected")
         app.listen(port, () => {
             console.log("servidor andando en el puerto:" + port)
         })

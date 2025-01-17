@@ -1,7 +1,8 @@
 node_modules
 notas.txt
 postgres-data
-src/models/user.model-copy.ts
+postgres-data-copy
+
 *.log
 logs
 .env
@@ -11,3 +12,9 @@ data/user.json
 # ejemplos didácticos de tests con vitest
 tests/examples/findOne.test.ts
 tests/examples/sum.test.ts
+
+# files
+src/config/database.ts
+src/models/user.model-copy.ts
+src/models/user.model-copy2.ts
+docker-compose-postgre.yml

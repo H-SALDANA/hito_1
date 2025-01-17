@@ -1,37 +1,67 @@
-import { pool } from "../config/database";
-import { User } from "../interfaces/user.interface";
-
-const findAll = async() =>{
-    const {rows} = await pool.query("SELECT * FROM USERS")
-    return rows as User[];
-}
-const findOneByEmail = async(email: string)=>{
-    // datos parametrizados:
-    const query ={
-        text: `
-        SELECT * FROM USERS WHERE email = $1     
-        `,
-        values:[email],
-    }
-    const { rows} = await pool.query(query)   
-    return rows[0] as User;
-}
-
-const create = async(email: string, password: string) =>{
-    const query ={
-        text: `
-        INSERT INTO USERS (email, password)
-        VALUES ($1, $2)
-        RETURNING *        
-        `,
-        values:[email, password]
-    }
-    const { rows} = await pool.query(query)    
-    return rows[0] as User;
-}
-
-export const UserModel = {
-    create,
-    findOneByEmail,
-    findAll,
-}
+import {
+    AllowNull,
+    BelongsTo,
+    Column,
+    DataType,
+    Default,
+    ForeignKey,
+    HasMany,
+    IsEmail,
+    IsUUID,
+    Model,
+    PrimaryKey,
+    Table,
+    Unique,
+  } from "sequelize-typescript";
+  
+  @Table
+  export class User extends Model {
+    @IsUUID(4)
+    @PrimaryKey
+    @Default(DataType.UUIDV4)
+    @Column(DataType.UUID)
+    uid!: string;
+  
+    @Default(DataType.UUIDV4)
+    @Column(DataType.STRING)
+    name!: string;
+  
+    @AllowNull(false)
+    @IsEmail
+    @Unique
+    @Column(DataType.STRING)
+    email!: string;
+  
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    password!: string;
+  
+    @HasMany(() => Post)
+    posts!: Post[];
+  }
+  
+  @Table
+  export class Post extends Model {
+    @IsUUID(4)
+    @PrimaryKey
+    @Default(DataType.UUIDV4)
+    @Column(DataType.UUID)
+    declare id: string;
+  
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    title!: string;
+  
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    content!: string;
+  
+    @ForeignKey(() => User)
+    @AllowNull(false)
+    @Column(DataType.UUID)
+    userId!: string;
+  
+    @BelongsTo(() => User)
+    user!: User;
+  }
+  
