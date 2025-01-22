@@ -9,4 +9,12 @@ router.use(verifyToken)
 
 router.post("/", petController.createPet)
 
+router.get("/", petController.getPets)
+
+router.get("/:uid", petController.getPetById)
+
+router.put("/:uid", petController.updatePet)
+
+router.delete("/:uid", petController.deletePet)
+
 export default router;

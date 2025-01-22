@@ -1,97 +1,97 @@
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs"
 // import { User} from "../interfaces/user.interface";
 import { User } from "../models/user.model";
 import { HttpError } from "../utils/httpError.util";
 
 
-const getAllUsers= async() =>{
-   return  await User.findAll();
+const getAllUsers = async () => {
+    return await User.findAll();
 }
 
-const getUser= async() =>{
+const getUser = async (id: string) => {
+    const user = await User.findByPk(id);
+    if (!user) {
+        throw new HttpError("User not found", 404);
 
+    } return user;
 }
 
-const getUserByEmail = async(email: string) =>{
-    const user = await User.findOne({where:{email}})
+const getUserByEmail = async (email: string) => {
+    const user = await User.findOne({ where: { email } })
     return user
 
 }
 
-const createUserWithEmailAndPassword = async(email:string, password: string) => {
-    const user = await User.findOne({where:{email}});
+const createUserWithEmailAndPassword = async (email: string, password: string) => {
+    const user = await User.findOne({ where: { email } });
 
-    if(user){
+    if (user) {
         throw new HttpError("Email already exists", 400)
     }
 
-    // hasheamos el pasword:
-    // const salt = await bcrypt.genSalt(10)
-    const passwordHashed = await bcrypt.hash(password, 10)
-    const newUser = await User.create({email, password: passwordHashed})
+    const salt = await bcrypt.genSalt(10)
+    const passwordHashed = await bcrypt.hash(password, salt)    
+    const newUser = await User.create({ email, password: passwordHashed })
     return newUser
-   
+
+}
+
+const findUserById = async (uid: string) => {
+    try {
+        console.log(`looking for user with UID: ${uid}`); // Añadir log
+        const user = await User.findByPk(uid);
+        if (user) {
+            console.log(`User found: ${user.uid}`); // Añadir log
+        } else {
+            console.log(`User with UID: ${uid} not found`); // Añadir log
+        }
+        return user;
+    } catch (error) {
+        console.error(`Error searching for user: ${error}`);
+        throw error;
+    }
+};
+
+const deleteUserService = async(uid: string) => {
+    try {
+        const user = await User.findByPk(uid);
+        if (user) {
+            await user.destroy();
+            return { message: 'User successfully deleted' };
+        } else {
+            throw new HttpError('User not found', 404);
+        }
+    } catch (error) {
+        console.error(`Error deleting user: ${error}`);
+        throw error;
+    }
 }
 
 
-// export const findUserById = async (uid: string) => { 
-//   // return await User.findByPk(uid); 
-  
-// };
 
-// export const findUserById = async (uid: string) => {
-//   console.log(`Buscando usuario con UID: ${uid}`); // Añadir log
-//   const user = await User.findByPk(uid);
-//   if (user) {
-//     console.log(`Usuario encontrado: ${user.uid}`); // Añadir log
-//   } else {
-//     console.log(`Usuario con UID: ${uid} no encontrado`); // Añadir log
-//   }
-//   return user;
-// };
 
-const findUserById = async (uid: number) => {
-  try {
-      console.log(`Buscando usuario con UID: ${uid}`); // Añadir log
-      const user = await User.findByPk(uid);
-      if (user) {
-          console.log(`Usuario encontrado: ${user.uid}`); // Añadir log
-      } else {
-          console.log(`Usuario con UID: ${uid} no encontrado`); // Añadir log
-      }
-      return user;
-  } catch (error) {
-      console.error(`Error al buscar el usuario: ${error}`);
-      throw error;
-  }
+
+
+
+const updateUser = async (uid: string, email: string, password: string) => {
+    try {
+        const user = await User.findByPk(uid);
+
+        if (user) {
+            await user.update({ email, password });
+            return user;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error updating user with ID ${uid}:`, error);
+        throw new Error('Server error when updating the user');
+    }
 };
 
 
-// const deleteUserService = async (uid: number): Promise<{ message: string }> => {
-//   const user = await User.findByPk(uid);
-//   if (user) {
-//     await user.destroy();
-//     return { message: 'Usuario eliminado exitosamente' };
-//   } else {
-//     throw new Error('Usuario no encontrado');
-//   }
-// };
 
-const deleteUserService = async (uid: number): Promise<{ message: string }> => {
-  try {
-      const user = await User.findByPk(uid);
-      if (user) {
-          await user.destroy();
-          return { message: 'Usuario eliminado exitosamente' };
-      } else {
-          throw new HttpError('Usuario no encontrado', 404);
-      }
-  } catch (error) {
-      console.error(`Error al eliminar el usuario: ${error}`);
-      throw error;
-  }
-};
 
 
 
@@ -104,5 +104,6 @@ export const userService = {
     getUserByEmail,
     findUserById,
     deleteUserService,
-    
+    updateUser,
+
 }

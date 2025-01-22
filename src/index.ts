@@ -10,7 +10,8 @@ import petRoute from "./routes/pet.route"
 
 import openapiSpecification from "./config/swagger";
 import swaggerUI from "swagger-ui-express";
-import { sequelize } from './config/datasequelize';
+
+import { sequelize } from './config/database';
 
 
 
@@ -42,6 +43,8 @@ app.use("/api/v1/users", userRoute)
 app.use("/api/v1/auth", authRoute)
 
 app.use("/api/v1/pets", petRoute)
+
+
 
 
 

@@ -1,23 +1,28 @@
-// aqui se crea el CRUD, empezamos con create:
+import { Table, Column, Model, PrimaryKey, Default, ForeignKey, BelongsTo, DataType } from 'sequelize-typescript';
+// import { sequelize } from '../config/database';
+import { User } from './user.model';
 
-import { pool } from "../config/database"
+@Table
+export class Pet extends Model {
+  @PrimaryKey
+  @Default(DataType.UUIDV4)
+  @Column(DataType.UUID)
+  uid!: string;
 
-const create = async (uid: string, name:string, age: number)=>{
-    const query = {
-       text: `
-        INSERT INTO PETS(name, age, user_id)
-        VALUES($1, $2, $3)
-        RETURNING *
-        ` ,
-        values: [name, age, uid],
-    }
+  @Column(DataType.STRING)
+  name!: string;
 
-    const {rows} = await pool.query(query)
-    console.log({rows})
-    return rows[0]
+  @Column(DataType.INTEGER)
+  age!: number;
 
+  @ForeignKey(() => User)
+  @Column(DataType.UUID)
+  user_id!: string;
+
+  @BelongsTo(() => User)
+  user!: User;
 }
 
-export const PetModel = {
-    create,
-}
+
+
+

@@ -8,28 +8,15 @@ const router = Router();
 router.use(verifyToken)
 // path: http:localhost:3000 /api/vl/users
 
-// leer los usuarios
-// ruta protegida:
-router.get('/', userController.getUsers)//
-// el codigo siguiente se extrajo el verifytoken.
-// router.get('/', userController.getUsers)
-
-
-// leer un único usuario por id
+router.get('/', userController.getUsers)
 
 router.get('/:id', userController.getUser)
 
-// crea un usuario
 router.post('/', userController.createUser)
-// eliminar un usuario por  id
 
+router.delete('/:uid', userController.deleteUser);
 
-router.delete('/api/v1/users/:uid', userController.deleteUser);
-
-
-
-
-// actualizar un usuario por id
+router.put('/:uid', userController.updateUserController);
 
  
 export default router;
